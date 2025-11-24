@@ -1,7 +1,10 @@
 scikit learn 
 matplotlib
 pandas 
-yfinance==0.2.4
-streamlit==1.34.0
+yfinance
+streamlit
+pyplot
+
 
 numpy
+
