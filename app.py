@@ -18,16 +18,18 @@ end_date = st.sidebar.text_input("End Date", "2025-11-07")
 # FETCH DATA
 # ---------------------------
 st.subheader("Stock Data")
+# Try limiting the end_date to less than or equal to today
+import datetime
+
+max_end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+if end_date > max_end_date:
+    end_date = max_end_date
+
 df = yf.download(symbol, start=start_date, end=end_date)
 if df.empty:
-    st.error("No data found. Check symbol or date range.")
+    st.error(f"No data found for symbol {symbol} in range {start_date} to {end_date}.")
     st.stop()
-# Fix multi-index from yfinance
-df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
-# Ensure Close column exists
-if "Close" not in df.columns:
-    st.error("Downloaded data has no 'Close' column. Cannot proceed.")
-    st.stop()
+
 st.dataframe(df.head(20))
 # ---------------------------
 # CREATE FEATURES
@@ -106,4 +108,5 @@ st.success(f" Predicted Close Price for Next Day: **₹{next_day_price:.2f}**")
 st.write("Model used features:")
 st.write(f"- SMA10: {last_sma10:.2f}")
 st.write(f"- SMA50: {last_sma50:.2f}")
+
 
